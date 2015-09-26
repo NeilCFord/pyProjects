@@ -1,7 +1,7 @@
-
+from __future__ import division
 from collections import Counter
 from functools import partial
-from .linear_algebra import dot
+from linear_algebra import dot
 import math, random
 import matplotlib
 import matplotlib.pyplot as plt
@@ -69,7 +69,7 @@ def patch(x, y, hatch, color):
 
 def show_weights(neuron_idx):
     weights = network[0][neuron_idx]
-    abs_weights = list(map(abs, weights))
+    abs_weights = map(abs, weights)
 
     grid = [abs_weights[row:(row+5)] # turn the weights into a 5x5 grid
             for row in range(0,25,5)] # [weights[0:5], ..., weights[20:25]]
@@ -157,7 +157,7 @@ if __name__ == "__main__":
                 for row in raw_digit.split("\n")
                 for c in row.strip()]
                 
-    inputs = list(map(make_digit, raw_digits))
+    inputs = map(make_digit, raw_digits)
 
     targets = [[1 if i == j else 0 for i in range(10)]
                for j in range(10)]
@@ -188,34 +188,34 @@ if __name__ == "__main__":
 
     for i, input in enumerate(inputs):
         outputs = predict(input)
-        print(i, [round(p,2) for p in outputs])
+        print i, [round(p,2) for p in outputs]
 
-    print(""".@@@.
+    print """.@@@.
 ...@@
 ..@@.
 ...@@
-.@@@.""")
-    print([round(x, 2) for x in
+.@@@."""
+    print [round(x, 2) for x in
           predict(  [0,1,1,1,0,  # .@@@.
                      0,0,0,1,1,  # ...@@
                      0,0,1,1,0,  # ..@@.
                      0,0,0,1,1,  # ...@@
                      0,1,1,1,0]) # .@@@.
-          ])
-    print()
+          ]
+    print
 
-    print(""".@@@.
+    print """.@@@.
 @..@@
 .@@@.
 @..@@
-.@@@.""")
-    print([round(x, 2) for x in 
+.@@@."""
+    print [round(x, 2) for x in 
           predict(  [0,1,1,1,0,  # .@@@.
                      1,0,0,1,1,  # @..@@
                      0,1,1,1,0,  # .@@@.
                      1,0,0,1,1,  # @..@@
                      0,1,1,1,0]) # .@@@.
-          ])
-    print()
+          ]
+    print
 
     

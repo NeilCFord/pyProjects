@@ -20,7 +20,7 @@ class Table:
     def update(self, updates, predicate):
         for row in self.rows:
             if predicate(row):
-                for column, new_value in list(updates.items()):
+                for column, new_value in updates.items():
                     row[column] = new_value
 
     def delete(self, predicate=lambda row: True):
@@ -41,7 +41,7 @@ class Table:
 
         for row in self.rows:
             new_row = [row[column] for column in keep_columns]
-            for column_name, calculation in list(additional_columns.items()):
+            for column_name, calculation in additional_columns.items():
                 new_row.append(calculation(row))
             result_table.insert(new_row)
 
@@ -72,10 +72,10 @@ class Table:
 
         result_table = Table(group_by_columns + list(aggregates.keys()))
 
-        for key, rows in list(grouped_rows.items()):
+        for key, rows in grouped_rows.items():
             if having is None or having(rows):
                 new_row = list(key)
-                for aggregate_name, aggregate_fn in list(aggregates.items()):
+                for aggregate_name, aggregate_fn in aggregates.items():
                     new_row.append(aggregate_fn(rows))
                 result_table.insert(new_row)
 
@@ -137,27 +137,27 @@ if __name__ == "__main__":
     # SELECT
 
     print("users.select()")
-    print((users.select()))
+    print(users.select())
     print()
 
     print("users.limit(2)")
-    print((users.limit(2)))
+    print(users.limit(2))
     print()
 
     print("users.select(keep_columns=[\"user_id\"])")
-    print((users.select(keep_columns=["user_id"])))
+    print(users.select(keep_columns=["user_id"]))
     print()
 
     print('where(lambda row: row["name"] == "Dunn")')
-    print((users.where(lambda row: row["name"] == "Dunn") \
-               .select(keep_columns=["user_id"])))
+    print(users.where(lambda row: row["name"] == "Dunn") \
+               .select(keep_columns=["user_id"]))
     print()
 
     def name_len(row): return len(row["name"])
 
     print('with name_length:')
-    print((users.select(keep_columns=[],
-             additional_columns = { "name_length" : name_len })))
+    print(users.select(keep_columns=[],
+             additional_columns = { "name_length" : name_len }))
     print()
 
     # GROUP BY

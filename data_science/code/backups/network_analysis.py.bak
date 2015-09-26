@@ -1,7 +1,7 @@
-
+from __future__ import division
 import math, random, re
 from collections import defaultdict, Counter, deque
-from .linear_algebra import dot, get_row, get_column, make_matrix, magnitude, scalar_multiply, shape, distance
+from linear_algebra import dot, get_row, get_column, make_matrix, magnitude, scalar_multiply, shape, distance
 from functools import partial
 
 users = [
@@ -87,7 +87,7 @@ for user in users:
 
 for source in users:
     source_id = source["id"]
-    for target_id, paths in source["shortest_paths"].items():
+    for target_id, paths in source["shortest_paths"].iteritems():
         if source_id < target_id:   # don't double count
             num_paths = len(paths)  # how many shortest paths?
             contrib = 1 / num_paths # contribution to centrality
@@ -103,7 +103,7 @@ for source in users:
 def farness(user):
     """the sum of the lengths of the shortest paths to each other user"""
     return sum(len(paths[0]) 
-               for paths in list(user["shortest_paths"].values()))
+               for paths in user["shortest_paths"].values())
 
 for user in users:
     user["closeness_centrality"] = 1 / farness(user)
@@ -182,7 +182,7 @@ endorsements_by_id = [(user["id"], len(user["endorsed_by"]))
                       for user in users]
 
 sorted(endorsements_by_id, 
-       key=lambda user_id_num_endorsements: user_id_num_endorsements[1],
+       key=lambda (user_id, num_endorsements): num_endorsements,
        reverse=True)
 
 def page_rank(users, damping = 0.85, num_iters = 100):
@@ -209,21 +209,21 @@ def page_rank(users, damping = 0.85, num_iters = 100):
 
 if __name__ == "__main__":
 
-    print("Betweenness Centrality")
+    print "Betweenness Centrality"
     for user in users:
-        print(user["id"], user["betweenness_centrality"])
-    print()
+        print user["id"], user["betweenness_centrality"]
+    print
 
-    print("Closeness Centrality")
+    print "Closeness Centrality"
     for user in users:
-        print(user["id"], user["closeness_centrality"])
-    print()
+        print user["id"], user["closeness_centrality"]
+    print
 
-    print("Eigenvector Centrality")
+    print "Eigenvector Centrality"
     for user_id, centrality in enumerate(eigenvector_centralities):
-        print(user_id, centrality)
-    print()
+        print user_id, centrality
+    print
 
-    print("PageRank")
-    for user_id, pr in page_rank(users).items():
-        print(user_id, pr)
+    print "PageRank"
+    for user_id, pr in page_rank(users).iteritems():
+        print user_id, pr

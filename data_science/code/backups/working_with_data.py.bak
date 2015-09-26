@@ -1,15 +1,14 @@
-
+from __future__ import division
 from collections import Counter, defaultdict
 from functools import partial
-from .linear_algebra import shape, get_row, get_column, make_matrix, \
+from linear_algebra import shape, get_row, get_column, make_matrix, \
     vector_mean, vector_sum, dot, magnitude, vector_subtract, scalar_multiply
-from .statistics import correlation, standard_deviation, mean
-from .probability import inverse_normal_cdf
-from .gradient_descent import maximize_batch
+from statistics import correlation, standard_deviation, mean
+from probability import inverse_normal_cdf
+from gradient_descent import maximize_batch
 import math, random, csv
 import matplotlib.pyplot as plt
 import dateutil.parser
-from functools import reduce
 
 def bucketize(point, bucket_size):
     """floor the point to the next lower multiple of bucket_size"""
@@ -21,7 +20,7 @@ def make_histogram(points, bucket_size):
 
 def plot_histogram(points, bucket_size, title=""):
     histogram = make_histogram(points, bucket_size)
-    plt.bar(list(histogram.keys()), list(histogram.values()), width=bucket_size)
+    plt.bar(histogram.keys(), histogram.values(), width=bucket_size)
     plt.title(title)
     plt.show()
 
@@ -141,7 +140,7 @@ def try_parse_field(field_name, value, parser_dict):
 
 def parse_dict(input_dict, parser_dict):
     return { field_name : try_parse_field(field_name, value, parser_dict)
-             for field_name, value in input_dict.items() }
+             for field_name, value in input_dict.iteritems() }
 
 #
 #
@@ -155,7 +154,7 @@ def picker(field_name):
 
 def pluck(field_name, rows):
     """turn a list of dicts into the list of field_name values"""
-    return list(map(picker(field_name), rows))
+    return map(picker(field_name), rows)
 
 def group_by(grouper, rows, value_transform=None):
     # key is output of grouper, value is list of rows
@@ -166,7 +165,7 @@ def group_by(grouper, rows, value_transform=None):
         return grouped
     else:
         return { key : value_transform(rows)
-                 for key, rows in grouped.items() }
+                 for key, rows in grouped.iteritems() }
 
 def percent_price_change(yesterday, today):
     return today["closing_price"] / yesterday["closing_price"] - 1
@@ -390,8 +389,8 @@ def transform(X, components):
 
 if __name__ == "__main__":
 
-    print("correlation(xs, ys1)", correlation(xs, ys1))
-    print("correlation(xs, ys2)", correlation(xs, ys2))
+    print "correlation(xs, ys1)", correlation(xs, ys1)
+    print "correlation(xs, ys2)", correlation(xs, ys2)
 
     # safe parsing
 
@@ -404,9 +403,9 @@ if __name__ == "__main__":
 
     for row in data:
         if any(x is None for x in row):
-            print(row)
+            print row
 
-    print("stocks")
+    print "stocks"
     with open("stocks.txt", "rb") as f:
         reader = csv.DictReader(f, delimiter="\t")
         data = [parse_dict(row, { 'date' : dateutil.parser.parse,
@@ -416,7 +415,7 @@ if __name__ == "__main__":
     max_aapl_price = max(row["closing_price"]
                          for row in data
                          if row["symbol"] == "AAPL")
-    print("max aapl price", max_aapl_price)
+    print "max aapl price", max_aapl_price
 
     # group rows by symbol
     by_symbol = defaultdict(list)
@@ -427,19 +426,19 @@ if __name__ == "__main__":
     # use a dict comprehension to find the max for each symbol
     max_price_by_symbol = { symbol : max(row["closing_price"]
                             for row in grouped_rows)
-                            for symbol, grouped_rows in by_symbol.items() }
-    print("max price by symbol")
-    print(max_price_by_symbol)
+                            for symbol, grouped_rows in by_symbol.iteritems() }
+    print "max price by symbol"
+    print max_price_by_symbol
 
     # key is symbol, value is list of "change" dicts
     changes_by_symbol = group_by(picker("symbol"), data, day_over_day_changes)
     # collect all "change" dicts into one big list
     all_changes = [change
-                   for changes in list(changes_by_symbol.values())
+                   for changes in changes_by_symbol.values()
                    for change in changes]
 
-    print("max change", max(all_changes, key=picker("change")))
-    print("min change", min(all_changes, key=picker("change")))
+    print "max change", max(all_changes, key=picker("change"))
+    print "min change", min(all_changes, key=picker("change"))
 
     # to combine percent changes, we add 1 to each, multiply them, and subtract 1
     # for instance, if we combine +10% and -20%, the overall change is
@@ -453,24 +452,24 @@ if __name__ == "__main__":
     overall_change_by_month = group_by(lambda row: row['date'].month,
                                        all_changes,
                                        overall_change)
-    print("overall change by month")
-    print(overall_change_by_month)
+    print "overall change by month"
+    print overall_change_by_month
 
-    print("rescaling")
+    print "rescaling"
 
     data = [[1, 20, 2],
             [1, 30, 3],
             [1, 40, 4]]
 
-    print("original: ", data)
-    print("scale: ", scale(data))
-    print("rescaled: ", rescale(data))
-    print()
+    print "original: ", data
+    print "scale: ", scale(data)
+    print "rescaled: ", rescale(data)
+    print
 
-    print("PCA")
+    print "PCA"
 
     Y = de_mean_matrix(X)
     components = principal_component_analysis(Y, 2)
-    print("principal components", components)
-    print("first point", Y[0])
-    print("first point transformed", transform_vector(Y[0], components))
+    print "principal components", components
+    print "first point", Y[0]
+    print "first point transformed", transform_vector(Y[0], components)

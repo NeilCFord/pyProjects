@@ -1,6 +1,6 @@
-
+from __future__ import division
 from collections import Counter, defaultdict
-from .machine_learning import split_data
+from machine_learning import split_data
 import math, random, re, glob
 
 def tokenize(message):
@@ -23,7 +23,7 @@ def word_probabilities(counts, total_spams, total_non_spams, k=0.5):
     return [(w,
              (spam + k) / (total_spams + 2 * k),
              (non_spam + k) / (total_non_spams + 2 * k))
-             for w, (spam, non_spam) in counts.items()]
+             for w, (spam, non_spam) in counts.iteritems()]
 
 def spam_probability(word_probs, message):
     message_words = tokenize(message)
@@ -111,22 +111,22 @@ def train_and_test_model(path):
     counts = Counter((is_spam, spam_probability > 0.5) # (actual, predicted)
                      for _, is_spam, spam_probability in classified)
 
-    print(counts)
+    print counts
 
     classified.sort(key=lambda row: row[2])
     spammiest_hams = filter(lambda row: not row[1], classified)[-5:]
     hammiest_spams = filter(lambda row: row[1], classified)[:5]
 
-    print("spammiest_hams", spammiest_hams)
-    print("hammiest_spams", hammiest_spams)
+    print "spammiest_hams", spammiest_hams
+    print "hammiest_spams", hammiest_spams
 
     words = sorted(classifier.word_probs, key=p_spam_given_word)
 
     spammiest_words = words[-5:]
     hammiest_words = words[:5]
 
-    print("spammiest_words", spammiest_words)
-    print("hammiest_words", hammiest_words)
+    print "spammiest_words", spammiest_words
+    print "hammiest_words", hammiest_words
 
 
 if __name__ == "__main__":

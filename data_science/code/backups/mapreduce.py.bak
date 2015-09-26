@@ -1,8 +1,8 @@
-
+from __future__ import division
 import math, random, re, datetime
 from collections import defaultdict, Counter
 from functools import partial
-from .naive_bayes import tokenize
+from naive_bayes import tokenize
 
 def word_count_old(documents):
     """word count not using MapReduce"""
@@ -30,7 +30,7 @@ def word_count(documents):
             collector[word].append(count)
 
     return [output
-            for word, counts in collector.items()
+            for word, counts in collector.iteritems()
             for output in wc_reducer(word, counts)]
 
 def map_reduce(inputs, mapper, reducer):
@@ -42,7 +42,7 @@ def map_reduce(inputs, mapper, reducer):
             collector[key].append(value)
 
     return [output
-            for key, values in collector.items()
+            for key, values in collector.iteritems()
             for output in reducer(key,values)]
 
 def reduce_with(aggregation_fn, key, values):
@@ -137,7 +137,7 @@ def matrix_multiply_reducer(m, key, indexed_values):
 
     # sum up all the products of the positions with two results
     sum_product = sum(results[0] * results[1]
-                      for results in list(results_by_index.values())
+                      for results in results_by_index.values()
                       if len(results) == 2)
                       
     if sum_product != 0.0:
@@ -151,29 +151,29 @@ if __name__ == "__main__":
                          for document in documents
                          for result in wc_mapper(document)]
 
-    print("wc_mapper results")
-    print(wc_mapper_results)
-    print() 
+    print "wc_mapper results"
+    print wc_mapper_results
+    print 
 
-    print("word count results")
-    print(word_count(documents))
-    print()
+    print "word count results"
+    print word_count(documents)
+    print
 
-    print("word count using map_reduce function")
-    print(map_reduce(documents, wc_mapper, wc_reducer))
-    print()
+    print "word count using map_reduce function"
+    print map_reduce(documents, wc_mapper, wc_reducer)
+    print
 
-    print("data science days")
-    print(data_science_days)
-    print()
+    print "data science days"
+    print data_science_days
+    print
 
-    print("user words")
-    print(user_words)
-    print()
+    print "user words"
+    print user_words
+    print
 
-    print("distinct likers")
-    print(distinct_likers_per_user)
-    print()
+    print "distinct likers"
+    print distinct_likers_per_user
+    print
 
     # matrix multiplication
 
@@ -182,8 +182,8 @@ if __name__ == "__main__":
     mapper = partial(matrix_multiply_mapper, 3)
     reducer = partial(matrix_multiply_reducer, 3)
 
-    print("map-reduce matrix multiplication")
-    print("entries:", entries)
-    print("result:", map_reduce(entries, mapper, reducer))
+    print "map-reduce matrix multiplication"
+    print "entries:", entries
+    print "result:", map_reduce(entries, mapper, reducer)
 
     

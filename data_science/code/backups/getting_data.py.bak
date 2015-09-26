@@ -45,7 +45,7 @@ def scrape(num_pages=31):
     books = []
 
     for page_num in range(1, num_pages + 1):
-        print(("souping page", page_num))
+        print("souping page", page_num)
         url = base_url + str(page_num)
         soup = BeautifulSoup(requests.get(url).text, 'html5lib')
             
@@ -114,7 +114,7 @@ def call_twitter_search_api():
     for status in twitter.search(q='"data science"')["statuses"]:
         user = status["user"]["screen_name"].encode('utf-8')
         text = status["text"].encode('utf-8')
-        print((user, ":", text))
+        print(user, ":", text)
         print()
 
 from twython import TwythonStreamer
@@ -140,7 +140,7 @@ class MyStreamer(TwythonStreamer):
             self.disconnect()
 
     def on_error(self, status_code, data):
-        print((status_code, data))
+        print(status_code, data)
         self.disconnect()
 
 def call_twitter_streaming_api():
@@ -154,7 +154,7 @@ def call_twitter_streaming_api():
 if __name__ == "__main__":
 
     def process(date, symbol, price):
-        print((date, symbol, price))
+        print(date, symbol, price)
 
     print("tab delimited stock prices:")
 
@@ -210,14 +210,14 @@ if __name__ == "__main__":
     print()
 
     print("GitHub API")
-    print(("dates", dates))
-    print(("month_counts", month_counts))
-    print(("weekday_count", weekday_counts))
+    print("dates", dates)
+    print("month_counts", month_counts)
+    print("weekday_count", weekday_counts)
 
     last_5_repositories = sorted(repos,
                                  key=lambda r: r["created_at"],
                                  reverse=True)[:5]
 
-    print(("last five languages", [repo["language"] 
-                                  for repo in last_5_repositories]))
+    print("last five languages", [repo["language"] 
+                                  for repo in last_5_repositories])
 

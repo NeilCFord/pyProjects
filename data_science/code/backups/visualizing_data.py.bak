@@ -41,8 +41,8 @@ def make_chart_histogram(plt):
     decile = lambda grade: grade // 10 * 10 
     histogram = Counter(decile(grade) for grade in grades)
 
-    plt.bar([x - 4 for x in list(histogram.keys())], # shift each bar to the left by 4
-            list(histogram.values()),                # give each bar its correct height
+    plt.bar([x - 4 for x in histogram.keys()], # shift each bar to the left by 4
+            histogram.values(),                # give each bar its correct height
             8)                                 # give each bar a width of 8
     plt.axis([-5, 105, 0, 5])                  # x-axis from -5 to 105,
                                                # y-axis from 0 to 5
@@ -80,7 +80,7 @@ def make_chart_several_line_charts(plt):
     bias_squared = [256,128,64,32,16,8,4,2,1]
     total_error  = [x + y for x, y in zip(variance, bias_squared)]
 
-    xs = list(range(len(variance)))
+    xs = range(len(variance))
 
     # we can make multiple calls to plt.plot 
     # to show multiple series on the same chart
