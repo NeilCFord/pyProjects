@@ -1,4 +1,5 @@
-**Porting the code examples to Python 3**
+**Porting the code examples to Python 3**  
+Original repository is at [https://github.com/joelgrus/data-science-from-scratch](https://github.com/joelgrus/data-science-from-scratch)
 
 
 Data Science from Scratch
